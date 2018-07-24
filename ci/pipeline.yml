@@ -1,5 +1,4 @@
 ---
-
 jobs:
 - name: build-ship-it
   serial: true
@@ -13,17 +12,21 @@ jobs:
     - get: alpine-bash-git
       trigger: true
   - put: version
-    params: {bump: minor}
+    params: 
+      bump: minor
+      annotate: version/number
   - put: alpine-bash-docker-image
     params:
       build: alpine-bash-git/
       tag: version/number
+      tag_as_latest: true
   - put: alpine-bash-git 
     params: 
       only_tag: true
       repository: alpine-bash-git
       tag: version/number
 
+      
 resources:
 - name: alpine-bash-git
   type: git
@@ -53,3 +56,5 @@ resources:
     branch: master
     file: alpine-docker-bash-git/version
     private_key: {{private-key-github-concourse}}
+    git_user: {{concourse-user-gitinfo}}
+
